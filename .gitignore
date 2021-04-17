@@ -1,0 +1,10 @@
+## Ignore Visual Studio build results, user files and temporary files.
+
+# Build results
+.out/
+
+# User-specific files
+*.user
+
+# Visual Studio cache/options directory
+.vs/
