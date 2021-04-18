@@ -1,9 +1,16 @@
 // Temporary code, excluded from build.
 
+//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--
+//------//------//------//------//------//------//------//------
+//--------------//--------------//--------------//--------------
+//------------------------------//------------------------------
+//--------------------------------------------------------------
+
 #ifndef WIN32_LEAN_AND_MEAN
 #error WIN32_LEAN_AND_MEAN not defined.
 #endif
 
+namespace flexible_gui {}
 namespace fxg = flexible_gui;
 using namespace flexible_gui;
 using flexible_gui::register_wnd_class;
@@ -14,12 +21,6 @@ using char_ptr = char*;
 
 	HINSTANCE hinst{GetModuleHandle(nullptr)};
 	if (hinst == nullptr) return 1;
-
-//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--
-//------//------//------//------//------//------//------//------
-//--------------//--------------//--------------//--------------
-//------------------------------//------------------------------
-//--------------------------------------------------------------
 
 bool Button::create_window() noexcept {
 	HINSTANCE app {GetModuleHandle(nullptr)};					//file (exe) used to create the calling process
@@ -41,7 +42,23 @@ bool Button::create_window() noexcept {
 	return 0;
 }
 
+	class Window_I {
+	public:
+		virtual ~Window_I() noexcept;
+
+	//	virtual void set_size();
+		virtual void set_position() = 0;
+	//	virtual void set_size_position();
+	//	virtual void set_visibility();
+
+	//	virtual int size() const noexcept;
+	//	virtual int position() const noexcept;
+	//	virtual bool visible() const noexcept;
+	protected:
+		Window_I() noexcept;
+	};
+
+// default constructor, copy constructor, move constructor, destructor, copy assignment, move assignment
 // simple - complex
 // basic - advanced
-
 //

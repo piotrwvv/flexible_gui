@@ -5,7 +5,8 @@
 
 namespace fxg = flexible_gui;
 
-fxg::Dynamic_Window::Dynamic_Window() : Window{} {
+fxg::Dynamic_Window::Dynamic_Window()
+	: Window{} {
 	std::cout << "+ Dynamic_Window\n";
 	return;
 }

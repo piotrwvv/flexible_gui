@@ -16,32 +16,32 @@ LRESULT CALLBACK fxg::Event_Dispatcher::select_handler(HWND f_hwnd, UINT msg, WP
 		Ev_Disp* ev_disp{reinterpret_cast<Ev_Disp*>(cs->lpCreateParams)};						//passed pointer, to the event dispatcher of the created window
 		SetLastError(0);
 		SetWindowLongPtr(f_hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(ev_disp));			//store the event dispatcher pointer in user data associated with the window
-		if (GetLastError() != 0) return 0;						//return FALSE - CreateWindowEx function will return nullptr handle
-		return DefWindowProc(f_hwnd, msg, wpar, lpar);			//continue processing of the window creation
+		if (GetLastError() != 0) return 0;														//return FALSE - CreateWindowEx function will return nullptr handle
+		return DefWindowProc(f_hwnd, msg, wpar, lpar);											//continue processing of the window creation
 	}
 
 	SetLastError(0);
 	Ev_Disp* ev_disp{reinterpret_cast<Ev_Disp*>(GetWindowLongPtr(f_hwnd, GWLP_USERDATA))};		//get the window pointer from user data associated with the window
 	if (ev_disp == nullptr) {
 		if (GetLastError() != 0) PostQuitMessage(1);
-		return DefWindowProc(f_hwnd, msg, wpar, lpar);			//continue processing without event dispatcher
+		return DefWindowProc(f_hwnd, msg, wpar, lpar);											//continue processing without event dispatcher
 	}
 
 	switch (msg) {
 	case WM_CLOSE: {
-		PostQuitMessage(0);										//send WM_QUIT with wpar = OK
+		PostQuitMessage(0);																		//send WM_QUIT with wpar = OK
 		return 0;
 	}
 	}
 	return DefWindowProc(f_hwnd, msg, wpar, lpar);
 }
 
-bool fxg::dispatch_message() { //TODO
+bool fxg::dispatch_message() {
 	MSG msg{};
 	while (PeekMessageA(&msg, nullptr, 0, 0, PM_REMOVE) != 0) {
 		if (msg.message == WM_QUIT) {
-			if (msg.wParam == 0) return 1;						//closing the application without error
-			return 1;											//closing the application with error
+			if (msg.wParam == 0) return 1;														//closing the application without error
+			return 1;																			//closing the application with error
 		}
 		TranslateMessage(&msg);
 		DispatchMessageA(&msg);

@@ -12,13 +12,13 @@ namespace flexible_gui {
 	public:
 		using Wnd_Impl = Window_Impl;
 
-		explicit Window_Impl();									//default constructor
-		Window_Impl(const Wnd_Impl&) = delete;					//copy constructor
-		Window_Impl(Wnd_Impl&&) = delete;						//move constructor
-		~Window_Impl() noexcept;								//destructor
+		explicit Window_Impl();
+		Window_Impl(const Wnd_Impl&) = delete;
+		Window_Impl(Wnd_Impl&&) = delete;
+		~Window_Impl() noexcept;
 
-		Wnd_Impl& operator=(const Wnd_Impl&) = delete;			//copy assignment
-		Wnd_Impl& operator=(Wnd_Impl&&) = delete;				//move assignment	private:
+		Wnd_Impl& operator=(const Wnd_Impl&) = delete;
+		Wnd_Impl& operator=(Wnd_Impl&&) = delete;
 	private:
 		bool create_window() noexcept;
 		bool destroy_window() noexcept;

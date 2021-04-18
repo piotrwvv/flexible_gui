@@ -6,16 +6,16 @@
 #include <chrono>
 #include <thread>
 
+namespace fxg = flexible_gui;
+
 int main() {
 	std::cout << "Hello World!\n";
 	try {
-		flexible_gui::Dynamic_Window main_wnd{};
-//		main_wnd.set_position();
-
-//		temp_lib::Button one_btt{};
+		fxg::Dynamic_Window main_wnd{};
+		main_wnd.move_to(fxg::Point{1000,500});
 
 		while (true) {
-			if (flexible_gui::work() == 1) break;
+			if (fxg::work() == 1) break;
 			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		}
 	}

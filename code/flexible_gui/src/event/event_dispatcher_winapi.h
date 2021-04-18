@@ -18,6 +18,7 @@ namespace flexible_gui {
 
 		static LRESULT __stdcall select_handler(HWND hwnd, UINT msg, WPARAM wpar, LPARAM lpar);
 	private:
+
 		Event_Handler_I* mouse_ev_handler{nullptr};
 
 	};
