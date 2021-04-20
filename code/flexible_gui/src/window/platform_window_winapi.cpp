@@ -1,5 +1,7 @@
 //
-#include "window_impl_winapi.h"
+#include "platform_window_winapi.h"
+
+#include "../event/message_translator_winapi.h"
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -8,20 +10,22 @@
 
 namespace fxg = flexible_gui;
 
-fxg::Window_Impl::Window_Impl() {
-	std::cout << "+ Window_Impl\n";
+fxg::Platform_Window::Platform_Window() {
+	std::cout << "+ Platform_Window {\n";
 	if (register_wnd_class() == 1) throw std::runtime_error{"register_wnd_class()"};
 	if (create_window() == 1) throw std::runtime_error{"create_window()"};
+	std::cout << "+ Platform_Window }\n";
 	return;
 }
 
-fxg::Window_Impl::~Window_Impl() noexcept {
+fxg::Platform_Window::~Platform_Window() noexcept {
+	std::cout << "- Platform_Window {\n";
 	if (destroy_window() == 1) std::cerr << "ERROR: destroy_window()\n";
-	std::cout << "- Window_Impl\n";
+	std::cout << "- Platform_Window }\n";
 	return;
 }
 
-bool fxg::register_wnd_class() noexcept {
+bool fxg::Platform_Window::register_wnd_class() noexcept {
 	static bool registered{false};								//WinAPI window class single registration state
 	if (registered) return 0;
 
@@ -37,7 +41,7 @@ bool fxg::register_wnd_class() noexcept {
 	WNDCLASSEX wcx{};
 	wcx.hInstance = app;										//module that contains the window event procedure
 	wcx.lpszClassName = L"WND_CLASS";							//window class name
-	wcx.lpfnWndProc = fxg::Event_Dispatcher::select_handler;	//window event procedure
+	wcx.lpfnWndProc = Message_Translator::message_to_event;		//window event procedure
 	wcx.style = CS_HREDRAW | CS_VREDRAW;						//window style
 
 	wcx.hbrBackground = static_cast<HBRUSH>(backg);				//window background brush
@@ -55,7 +59,7 @@ bool fxg::register_wnd_class() noexcept {
 	return 0;
 }
 
-bool fxg::Window_Impl::create_window() noexcept {
+bool fxg::Platform_Window::create_window() noexcept {
 	HINSTANCE app{GetModuleHandle(nullptr)};					//file (exe) used to create the calling process
 	if (app == nullptr) return 1;
 
@@ -69,16 +73,20 @@ bool fxg::Window_Impl::create_window() noexcept {
 		nullptr,												//window parent or owner
 		nullptr,												//window menu or child identifier
 		app,													//module to be associated with the window
-		&ev_disp												//pointer of type void*, to be passed to the window by WM_NCCREATE message
+		&ev_gen													//pointer of type void*, to be passed to the window by WM_NCCREATE message
 	);
 	if (hwnd == nullptr) return 1;
 	return 0;
 }
 
-bool fxg::Window_Impl::destroy_window() noexcept {
+bool fxg::Platform_Window::destroy_window() noexcept {
 	if (hwnd == nullptr) return 0;
 	if (DestroyWindow(hwnd) == 0) return 1;
 	hwnd = nullptr;
 	return 0;
+}
+
+bool flexible_gui::platform_work() {
+	return Message_Translator::receive_message();
 }
 //

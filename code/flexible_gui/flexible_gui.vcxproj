@@ -19,21 +19,23 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\event\event_dispatcher_winapi.cpp" />
+    <ClCompile Include="src\event\event_generator.cpp" />
+    <ClCompile Include="src\event\message_translator_winapi.cpp" />
     <ClCompile Include="src\geometry.cpp" />
     <ClCompile Include="src\window\dynamic_window.cpp" />
-    <ClCompile Include="src\event\event_handler.cpp" />
-    <ClCompile Include="src\window\window.cpp" />
-    <ClCompile Include="src\window\window_impl_winapi.cpp" />
+    <ClCompile Include="src\event\on_event_action.cpp" />
+    <ClCompile Include="src\window\base_window.cpp" />
+    <ClCompile Include="src\window\platform_window_winapi.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\flexible_gui.h" />
-    <ClInclude Include="src\event\event_dispatcher_winapi.h" />
+    <ClInclude Include="src\event\event_generator.h" />
+    <ClInclude Include="src\event\message_translator_winapi.h" />
     <ClInclude Include="src\geometry.h" />
     <ClInclude Include="src\window\dynamic_window.h" />
-    <ClInclude Include="src\event\event_handler.h" />
-    <ClInclude Include="src\window\window.h" />
-    <ClInclude Include="src\window\window_impl_winapi.h" />
+    <ClInclude Include="src\event\on_event_action.h" />
+    <ClInclude Include="src\window\base_window.h" />
+    <ClInclude Include="src\window\platform_window_winapi.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

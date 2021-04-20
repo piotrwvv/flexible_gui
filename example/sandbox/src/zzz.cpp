@@ -57,8 +57,15 @@ bool Button::create_window() noexcept {
 	protected:
 		Window_I() noexcept;
 	};
-
-// default constructor, copy constructor, move constructor, destructor, copy assignment, move assignment
-// simple - complex
-// basic - advanced
+/*
+	default constructor, copy constructor, move constructor, destructor, copy assignment, move assignment
+	simple - complex
+	basic - advanced
+	read - write
+	get - set
+	load - store
+	load - save
+	position, size, surface
+	display
+*/
 //

@@ -1,5 +1,7 @@
 //
-#include "event_dispatcher_winapi.h"
+#include "message_translator_winapi.h"
+
+#include "event_generator.h"
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -9,39 +11,12 @@
 
 namespace fxg = flexible_gui;
 
-LRESULT CALLBACK fxg::Event_Dispatcher::select_handler(HWND f_hwnd, UINT msg, WPARAM wpar, LPARAM lpar) {
-	msg_dbg("f_hwnd, nullptr, msg", f_hwnd, nullptr, msg);
-	if (msg == WM_NCCREATE) {
-		CREATESTRUCT* cs{reinterpret_cast<CREATESTRUCT*>(lpar)};								//pointer to structure that contains parameters of the CreateWindowEx function
-		Ev_Disp* ev_disp{reinterpret_cast<Ev_Disp*>(cs->lpCreateParams)};						//passed pointer, to the event dispatcher of the created window
-		SetLastError(0);
-		SetWindowLongPtr(f_hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(ev_disp));			//store the event dispatcher pointer in user data associated with the window
-		if (GetLastError() != 0) return 0;														//return FALSE - CreateWindowEx function will return nullptr handle
-		return DefWindowProc(f_hwnd, msg, wpar, lpar);											//continue processing of the window creation
-	}
-
-	SetLastError(0);
-	Ev_Disp* ev_disp{reinterpret_cast<Ev_Disp*>(GetWindowLongPtr(f_hwnd, GWLP_USERDATA))};		//get the window pointer from user data associated with the window
-	if (ev_disp == nullptr) {
-		if (GetLastError() != 0) PostQuitMessage(1);
-		return DefWindowProc(f_hwnd, msg, wpar, lpar);											//continue processing without event dispatcher
-	}
-
-	switch (msg) {
-	case WM_CLOSE: {
-		PostQuitMessage(0);																		//send WM_QUIT with wpar = OK
-		return 0;
-	}
-	}
-	return DefWindowProc(f_hwnd, msg, wpar, lpar);
-}
-
-bool fxg::dispatch_message() {
+bool fxg::Message_Translator::receive_message() {
 	MSG msg{};
 	while (PeekMessageA(&msg, nullptr, 0, 0, PM_REMOVE) != 0) {
 		if (msg.message == WM_QUIT) {
-			if (msg.wParam == 0) return 1;														//closing the application without error
-			return 1;																			//closing the application with error
+			if (msg.wParam != 0) return 1;						//closing the application with error
+			return 1;											//closing the application without error
 		}
 		TranslateMessage(&msg);
 		DispatchMessageA(&msg);
@@ -49,7 +24,46 @@ bool fxg::dispatch_message() {
 	return 0;
 }
 
-void fxg::msg_dbg(const char* ch, HWND proc_wnd, HWND cl_wnd, int msg) {
+LRESULT CALLBACK fxg::Message_Translator::message_to_event(HWND hwnd, UINT msg, WPARAM wpar, LPARAM lpar) {
+
+	dbg_msg("hwnd, nullptr, msg", hwnd, nullptr, msg);
+
+	Event_Generator* gen{generator_ptr(hwnd)};
+	if (gen == nullptr) {
+		if (msg != WM_NCCREATE) {
+			return DefWindowProc(hwnd, msg, wpar, lpar);		//default processing without event generator
+		}
+	}
+	switch (msg) {
+	case WM_NCCREATE: {
+		if (save_generator_ptr(hwnd, lpar) == 1) return 0;		//return FALSE - CreateWindowEx function will return nullptr handle
+		break;
+	}
+	case WM_LBUTTONDOWN: {
+		break;
+	}
+	case WM_CLOSE: {
+		PostQuitMessage(0);										//send WM_QUIT with wpar = OK
+		return 0;												//message processed
+	}
+	}
+	return DefWindowProc(hwnd, msg, wpar, lpar);				//continue with default message processing
+}
+
+bool fxg::Message_Translator::save_generator_ptr(HWND hwnd, LPARAM lpar) {
+	CREATESTRUCT* cs{reinterpret_cast<CREATESTRUCT*>(lpar)};									//pointer to structure that contains parameters of the CreateWindowEx function
+	Event_Generator* gen{reinterpret_cast<Event_Generator*>(cs->lpCreateParams)};				//passed pointer, to the event generator of the created window
+	SetLastError(0);
+	SetWindowLongPtr(hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(gen));						//store the event generator pointer in user data associated with the window
+	if (GetLastError() != 0) return 1;															//error
+	return 0;
+}
+
+inline fxg::Event_Generator* fxg::Message_Translator::generator_ptr(HWND hwnd) {
+	return reinterpret_cast<Event_Generator*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));			//get the event generator pointer from user data associated with the window
+}
+
+void fxg::Message_Translator::dbg_msg(const char* ch, HWND proc_wnd, HWND cl_wnd, int msg) {
 	static long t1{0}, t2{0}, dt{0};
 	t2 = clock();
 	std::string s1{ch}, s2{"> "};

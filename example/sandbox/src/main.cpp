@@ -1,7 +1,7 @@
 //
 #include "flexible_gui/include/flexible_gui.h"
 
-#include <iostream>
+#include <iostream>												//cin cout
 #include <vector>
 #include <chrono>
 #include <thread>
@@ -12,18 +12,20 @@ int main() {
 	std::cout << "Hello World!\n";
 	try {
 		fxg::Dynamic_Window main_wnd{};
+
 		main_wnd.move_to(fxg::Point{1000,500});
 
 		while (true) {
 			if (fxg::work() == 1) break;
 			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		}
+		std::cout << "Close.\n";
 	}
 	catch (std::exception& err) {
 		std::cerr << "ERROR: " << err.what() << '\n';
 	}
 	catch (...) {
-
+		std::cerr << "ERROR: unknown" << '\n';
 	}
 	std::cout << "Exit.\n";
 	return 0;
