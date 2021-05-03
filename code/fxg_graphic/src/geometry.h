@@ -1,7 +1,7 @@
-//
+//##############################################################################################
 #pragma once
 
-namespace flexible_gui {
+namespace flexible_gui { namespace graphic {
 
 	class Point {
 	public:
@@ -16,7 +16,7 @@ namespace flexible_gui {
 	private:
 		short x_coordinate{0}, y_coordinate{0};
 	};
-
+//--------------------------------------------------------------
 	class Rectangle {
 	public:
 		explicit Rectangle(short w, short h, Point pt) noexcept;
@@ -24,7 +24,7 @@ namespace flexible_gui {
 		void set_w(short w) noexcept;
 		void set_h(short h) noexcept;
 		void set_w_h(short w, short h) noexcept;
-		void set_parameters(short w, short h, Point pt);
+		void set_parameters(short w, short h, Point pt) noexcept;
 
 		short w() const noexcept;
 		short h() const noexcept;
@@ -32,7 +32,7 @@ namespace flexible_gui {
 		short y() const noexcept;
 	private:
 		short width{0}, height{0};
-		Point top_left{0,0};
+		Point top_left{0,0};									//corner of the rectangle
 	};
-}
-//
+}}
+//##############################################################################################

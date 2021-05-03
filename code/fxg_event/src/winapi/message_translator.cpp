@@ -1,17 +1,23 @@
-//
-#include "message_translator_winapi.h"
+//##############################################################################################
+#include "message_translator.h"
 
-#include "event_generator.h"
+#include "../event_generator.h"
+
+#include "fxg_graphic/include/geometry.h"
 
 #define WIN32_LEAN_AND_MEAN
 
+#include <stdexcept>											//standard exceptions
 #include <iostream>												//cin cout
 #include <string>												//for debug
 #include <Windows.h>											//WinAPI
+#include <Windowsx.h>											//WinAPI definitions
 
-namespace fxg = flexible_gui;
-
-bool fxg::Message_Translator::receive_message() {
+using namespace flexible_gui::event;
+//--------------------------------------------------------------
+// Message_Translator class.
+//--------------------------------------------------------------
+bool Message_Translator::receive_message() {
 	MSG msg{};
 	while (PeekMessageA(&msg, nullptr, 0, 0, PM_REMOVE) != 0) {
 		if (msg.message == WM_QUIT) {
@@ -24,7 +30,7 @@ bool fxg::Message_Translator::receive_message() {
 	return 0;
 }
 
-LRESULT CALLBACK fxg::Message_Translator::message_to_event(HWND hwnd, UINT msg, WPARAM wpar, LPARAM lpar) {
+LRESULT CALLBACK Message_Translator::message_to_event(HWND hwnd, UINT msg, WPARAM wpar, LPARAM lpar) {
 
 	dbg_msg("hwnd, nullptr, msg", hwnd, nullptr, msg);
 
@@ -40,6 +46,7 @@ LRESULT CALLBACK fxg::Message_Translator::message_to_event(HWND hwnd, UINT msg, 
 		break;
 	}
 	case WM_LBUTTONDOWN: {
+		gen->generate_on_mouse(graphic::Point {GET_X_LPARAM(lpar),GET_Y_LPARAM(lpar)});
 		break;
 	}
 	case WM_CLOSE: {
@@ -50,7 +57,7 @@ LRESULT CALLBACK fxg::Message_Translator::message_to_event(HWND hwnd, UINT msg, 
 	return DefWindowProc(hwnd, msg, wpar, lpar);				//continue with default message processing
 }
 
-bool fxg::Message_Translator::save_generator_ptr(HWND hwnd, LPARAM lpar) {
+bool Message_Translator::save_generator_ptr(HWND hwnd, LPARAM lpar) {
 	CREATESTRUCT* cs{reinterpret_cast<CREATESTRUCT*>(lpar)};									//pointer to structure that contains parameters of the CreateWindowEx function
 	Event_Generator* gen{reinterpret_cast<Event_Generator*>(cs->lpCreateParams)};				//passed pointer, to the event generator of the created window
 	SetLastError(0);
@@ -59,11 +66,11 @@ bool fxg::Message_Translator::save_generator_ptr(HWND hwnd, LPARAM lpar) {
 	return 0;
 }
 
-inline fxg::Event_Generator* fxg::Message_Translator::generator_ptr(HWND hwnd) {
+inline Event_Generator* Message_Translator::generator_ptr(HWND hwnd) {
 	return reinterpret_cast<Event_Generator*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));			//get the event generator pointer from user data associated with the window
 }
 
-void fxg::Message_Translator::dbg_msg(const char* ch, HWND proc_wnd, HWND cl_wnd, int msg) {
+void Message_Translator::dbg_msg(const char* ch, HWND proc_wnd, HWND cl_wnd, int msg) {
 	static long t1{0}, t2{0}, dt{0};
 	t2 = clock();
 	std::string s1{ch}, s2{"> "};
@@ -140,4 +147,4 @@ void fxg::Message_Translator::dbg_msg(const char* ch, HWND proc_wnd, HWND cl_wnd
 	dt = t1 - t2;
 	return;
 }
-//
+//##############################################################################################

@@ -1,22 +1,31 @@
 //
-#include "flexible_gui/include/flexible_gui.h"
+//#include "event/on_event_action.h"
 
+//#include "flexible_gui/include/flexible_gui.h"					//library user interfece
+
+#include <exception>
 #include <iostream>												//cin cout
-#include <vector>
+//#include <memory>
 #include <chrono>
 #include <thread>
 
-namespace fxg = flexible_gui;
+//using namespace sandbox;
+//namespace fxg = flexible_gui;
 
 int main() {
 	std::cout << "Hello World!\n";
 	try {
-		fxg::Dynamic_Window main_wnd{};
+//		fxg::window::Window main_wnd{};
 
-		main_wnd.move_to(fxg::Point{1000,500});
+//		std::unique_ptr<fxg::On_Mouse_Action_I> act{new Main_Wnd_On_Mouse};
+//		main_wnd.set_action(std::move(act));
+
+//		main_wnd.add(&child1_wnd);
+
+//		main_wnd.show();
 
 		while (true) {
-			if (fxg::work() == 1) break;
+//			if (fxg::platform_work() == 1) break;
 			std::this_thread::sleep_for(std::chrono::milliseconds(100));
 		}
 		std::cout << "Close.\n";

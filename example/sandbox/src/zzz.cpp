@@ -1,5 +1,6 @@
+//##############################################################################################
 // Temporary code, excluded from build.
-
+//
 //--//--//--//--//--//--//--//--//--//--//--//--//--//--//--//--
 //------//------//------//------//------//------//------//------
 //--------------//--------------//--------------//--------------
@@ -16,11 +17,75 @@ using namespace flexible_gui;
 using flexible_gui::register_wnd_class;
 using char_ptr = char*;
 
+//	default constructor, copy constructor, move constructor, destructor, copy assignment, move assignment
+
 	HINSTANCE hinst{nullptr};
 	if ((hinst = GetModuleHandle(nullptr)) == nullptr) return 1;
 
 	HINSTANCE hinst{GetModuleHandle(nullptr)};
 	if (hinst == nullptr) return 1;
+
+
+
+	DWORD style{};
+	switch (f_style) {
+	case Window_Style::dynamic_float: {
+		style = WS_OVERLAPPEDWINDOW;							//OVERLAPPED+BORDER+DLGFRAME+THICKFRAME+SYSMENU+MINIMIZEBOX+MAXIMIZEBOX
+		break;
+	}
+//	case Window_Style::dynamic_dock: {
+//		style = WS_TILED | WS_THICKFRAME;						//OVERLAPPED
+//		break;
+//	}
+//	case Window_Style::static_float: {
+//		style = WS_TILED | WS_DLGFRAME;							//OVERLAPPED
+//		break;
+//	}
+//	case Window_Style::static_dock: {
+//		style = WS_TILED | WS_BORDER;							//OVERLAPPED
+//		break;
+//	}
+//	case Window_Style::panel: {
+//		style = WS_TILED | WS_BORDER;							//OVERLAPPED
+//		break;
+//	}
+	}
+
+void Platform_Window::set_parent(HWND parent) {
+	std::cout << "set_parent()\n";
+
+//	std::cout << GetWindowLongPtr(hwnd, GWLP_HWNDPARENT) << "\n";
+
+//	SetLastError(0);
+//	SetWindowLongPtr(hwnd, GWLP_HWNDPARENT, reinterpret_cast<LONG_PTR>(parent));
+//	if (GetLastError() != 0) throw std::runtime_error{"SetWindowLongPtr()"};
+
+//	SetLastError(0);
+//	if (SetParent(hwnd, parent) == nullptr) {
+//		if (GetLastError() != 0) throw std::runtime_error{"SetParent()"};
+//	}
+
+//	std::cout << GetWindowLongPtr(hwnd, GWLP_HWNDPARENT) << "\n";
+	return;
+}
+
+void Platform_Window::clear_parent(HWND parent) {
+	std::cout << "clear_parent()\n";
+
+//	std::cout << GetWindowLongPtr(hwnd, GWLP_HWNDPARENT) << "\n";
+
+//	SetLastError(0);
+//	SetWindowLongPtr(hwnd, GWLP_HWNDPARENT, reinterpret_cast<LONG_PTR>(parent));
+//	if (GetLastError() != 0) throw std::runtime_error{"SetWindowLongPtr()"};
+
+//	SetLastError(0);
+//	if (SetParent(hwnd, parent) == nullptr) {
+//		if (GetLastError() != 0) throw std::runtime_error{"SetParent()"};
+//	}
+
+//	std::cout << GetWindowLongPtr(hwnd, GWLP_HWNDPARENT) << "\n";
+	return;
+}
 
 bool Button::create_window() noexcept {
 	HINSTANCE app {GetModuleHandle(nullptr)};					//file (exe) used to create the calling process
@@ -41,31 +106,9 @@ bool Button::create_window() noexcept {
 	if (hwnd == nullptr) return 1;
 	return 0;
 }
-
-	class Window_I {
-	public:
-		virtual ~Window_I() noexcept;
-
-	//	virtual void set_size();
-		virtual void set_position() = 0;
-	//	virtual void set_size_position();
-	//	virtual void set_visibility();
-
-	//	virtual int size() const noexcept;
-	//	virtual int position() const noexcept;
-	//	virtual bool visible() const noexcept;
-	protected:
-		Window_I() noexcept;
-	};
 /*
-	default constructor, copy constructor, move constructor, destructor, copy assignment, move assignment
-	simple - complex
-	basic - advanced
-	read - write
-	get - set
-	load - store
-	load - save
-	position, size, surface
-	display
+
+
+
 */
-//
+//##############################################################################################
